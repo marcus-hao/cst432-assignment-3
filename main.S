@@ -1,3 +1,8 @@
+.equ LED, 16	// LED on GPIO 16
+.equ BUZZER, 5	// BUZZER on GPIO 5
+.equ BUTTON, 26	// BUTTON on GPIO 26
+.equ PIR, 6		// PIR Sensor on GPIO 6
+
 .text
 .global main
 
@@ -9,27 +14,27 @@ main:
 	// setup
 	mov x0, #0
 	mov x1, #0
-	mov x2, #17		// LED on GPIO 17
+	mov x2, #LED
 	mov x3, #0
 	bl lgGpioClaimOutput
 	cbnz x0, done
 
 	mov x0, #0
 	mov x1, #0
-	mov x2, #22		// Buzzer on GPIO 22
+	mov x2, #BUZZER
 	mov x3, #0
 	bl lgGpioClaimOutput
 	cbnz x0, done
 
 	mov x0, #0
 	mov x1, #0
-	mov x2, #23		// Button on GPIO 23
+	mov x2, #BUTTON
 	bl lgGpioClaimInput
 	cbnz x0, done
 
 	mov x0, #0
 	mov x1, #0
-	mov x2, #24		// PIR sensor on GPIO 24
+	mov x2, #PIR
 	bl lgGpioClaimInput
 	cbnz x0, done
 
@@ -43,12 +48,12 @@ main:
 
 loop:
 	mov x0, #0
-	mov x1, #23
+	mov x1, #BUTTON
 	bl lgGpioRead	// Read button press
 	cmp x0, #0
 	bne blink		// If active, then blink
 	mov x0, #0
-	mov x1, #24
+	mov x1, #PIR
 	bl lgGpioRead	// Read PIR motion
 	cmp x0, #0
 	bne blink		// If motion detected, then blink
@@ -63,24 +68,24 @@ loop_blink:
 	beq end_loop
 
 	mov x0, #0
-	mov x1, #17
+	mov x1, #LED
 	mov x2, #1
 	bl lgGpioWrite		// LED HIGH
 
 	mov x0, #0
-	mov x1, #22		
+	mov x1, #BUZZER	
 	mov x2, #1
 	bl lgGpioWrite		// Buzzer HIGH
 
 	bl delay			// Delay 0.5s
 
 	mov x0, #0
-	mov x1, #17
+	mov x1, #LED
 	mov x2, #0
 	bl lgGpioWrite		// LED LOW
 
 	mov x0, #0
-	mov x1, #22
+	mov x1, #BUZZER
 	mov x2, #0
 	bl lgGpioWrite		// Buzzer LOW
 
